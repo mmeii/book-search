@@ -10,6 +10,10 @@ const bookSchema = new Schema({
         type: String,
         required: true
     },
+    date: {
+        type: Date,
+        default: Date.now
+    },
     description: {
         type: String,
     },
@@ -18,7 +22,6 @@ const bookSchema = new Schema({
     },
     link: {
         type: String,
-        required: true
     }
 });
 
