@@ -1,43 +1,67 @@
-import React, { useState, useEffect } from 'react';
+import React, { Component } from 'react';
+import Grid from '../components/Grid';
 import Jumbotron from '../components/Jumbotron'
-import Result from '../components/Result';
+import ResultContainer from '../components/ResultContainer';
 import ResultCard from '../components/ResultCard';
 import SearchForm from '../components/SearchForm';
 import API from '../utils/API';
 
-function Home() {
-    const [books, setBooks] = useState([]);
-    const [search, setSearch] = useState("");
-
-    const handleInputChange = event => {
-        event.preventDefault();
-
-        setSearch(event.target.value);
+class Home extends Component {
+    //initial state
+    state = {
+        search: "",
+        books: []
     };
 
-    const handleSaveBook = id => {
-        API.saveBook({
-            id: books.id,
-            title: books.volumeInfo.title,
-            authors: books.volumeInfo.authors,
-            description: books.volumeInfo.description,
-            image: books.volumeInfo.imageLinks.thumbnail,
-            link: books.volumeInfo.infoLink,
-        });
-    };
+    // componentDidMount() {
+    //     this.getGoogleBooks("");
+    // }
 
-    const handleSearchForm = event => {
-        event.preventDefault();
-
-        API.getGoogleBooks(search)
+    searchBooks = () => {
+        API.getGoogleBooks(this.state.search)
             .then(res => {
-                setBooks(res);
-                console.log(books);
+                this.setState({
+                    books: res.data.items
+                })
             })
-            .catch(err => console.log(err));
+            .catch(() =>
+                this.setState({
+                    books: [],
+                    message: "No books found, try to search for something else!"
+                }));
     }
 
-    const resultsMap = books.map(book => (
+    handleInputChange = event => {
+        const { name, value } = event.target;
+        this.setState({
+            [name]: value
+        });
+    }
+
+
+    handleSearchForm = event => {
+        event.preventDefault();
+        this.searchBooks();
+    }
+
+    // save book by id
+    handleSaveBook = id => {
+        const currBook = this.state.books.find(book => book.id === id);
+
+        API.saveBook({
+            id: currBook.id,
+            title: currBook.volumeInfo.title,
+            authors: currBook.volumeInfo.authors,
+            description: currBook.volumeInfo.description,
+            image: currBook.volumeInfo.imageLinks.thumbnail,
+            link: currBook.volumeInfo.infoLink,
+        })
+            .then(res => console.log("post book on save to db", res))
+            .catch(err => console.log("err, can't save book", err));
+    };
+
+
+    resultsMap = books.map(book => (
         <ResultCard
             key={book.id}
             title={book.books.volumeInfo.title}
@@ -56,20 +80,23 @@ function Home() {
         />
     ))
 
-    return (
-        <div className="container">
-            <Jumbotron />
-            <SearchForm
-                handleInputChange={handleInputChange}
-                handleSearchForm={handleSearchForm}
-            />
-            <Result />
-            {!books.length ? (<h5>Nothing to display</h5>)
-                : (
-                    { resultsMap }
-                )}
-        </div>
-    )
+    render() {
+        return (
+            <div className="container" >
+                <Grid />
+                <Jumbotron />
+                <SearchForm
+                    handleInputChange={handleInputChange}
+                    handleSearchForm={handleSearchForm}
+                />
+                <ResultContainer />
+                {!books.length ? (<h5>Nothing to display</h5>)
+                    : (
+                        { resultsMap }
+                    )}
+            </div >
+        )
+    }
 }
 
 export default Home;
