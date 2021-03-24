@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import Grid from '../components/Grid';
+// import Grid from '../components/Grid';
 import Jumbotron from '../components/Jumbotron'
 import ResultContainer from '../components/ResultContainer';
 import ResultCard from '../components/ResultCard';
@@ -61,39 +61,39 @@ class Home extends Component {
     };
 
 
-    resultsMap = books.map(book => (
-        <ResultCard
-            key={book.id}
-            title={book.books.volumeInfo.title}
-            authors={book.volumeInfo.authors}
-            description={book.volumeInfo.description}
-            image={book.volumeInfo.imageLinks.thumbnail}
-            link={book.volumeInfo.infoLink}
-            Button={() => (
-                <button
-                    onClick={() => handleSaveBook(book.id)}
-                    className="btn btn-primary ml-2"
-                >
-                    Save
-                </button>
-            )}
-        />
-    ))
+    // resultsMap = books.map(book => (
+    //     <ResultCard
+    //         key={book.id}
+    //         title={book.books.volumeInfo.title}
+    //         authors={book.volumeInfo.authors}
+    //         description={book.volumeInfo.description}
+    //         image={book.volumeInfo.imageLinks.thumbnail}
+    //         link={book.volumeInfo.infoLink}
+    //         Button={() => (
+    //             <button
+    //                 onClick={() => handleSaveBook(book.id)}
+    //                 className="btn btn-primary ml-2"
+    //             >
+    //                 Save
+    //             </button>
+    //         )}
+    //     />
+    // ))
 
     render() {
         return (
             <div className="container" >
-                <Grid />
+                {/* <Grid /> */}
                 <Jumbotron />
                 <SearchForm
-                    handleInputChange={handleInputChange}
-                    handleSearchForm={handleSearchForm}
+                // handleInputChange={handleInputChange}
+                // handleSearchForm={handleSearchForm}
                 />
                 <ResultContainer />
-                {!books.length ? (<h5>Nothing to display</h5>)
+                {/* {!books.length ? (<h5>Nothing to display</h5>)
                     : (
                         { resultsMap }
-                    )}
+                    )} */}
             </div >
         )
     }
